@@ -29,6 +29,11 @@ Add this to your `/etc/hosts`:
 127.0.0.1   system2.domain2.com
 ```
 
+To run everything end to end, run: 
+```bash
+./scripts/up_test_down.sh
+```
+
 ## Setting up the firewall
 
 Every project has to use an open port as docker does not allow socket 
