@@ -34,3 +34,7 @@ Add this to your `/etc/hosts`:
 Every project has to use an open port as docker does not allow socket 
 communication. But we don't want to expose them to the internet. Thus 
 we have to set up the firewall to protect these ports.
+
+## Thank you
+* https://tjtelan.com/blog/how-to-link-multiple-docker-compose-via-network/
+* 
