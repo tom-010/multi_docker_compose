@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+
+  reverse_proxy:
+    image: nginx:1.21.4
+    restart: unless-stopped
+    ports:
+      - 80:80
+    volumes:
+      - ./conf/reverse_proxy/conf.d:/etc/nginx/conf.d
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      - reverse-proxy-net
+    depends_on:
+      - system1
+      - system2
+  
+  system1:
+    image: nginx:1.21.4
+    restart: unless-stopped
+    expose:
+      - 80
+    volumes:
+      - ./conf/system1/conf.d:/etc/nginx/conf.d
+    networks:
+      - reverse-proxy-net
+  
+  system2:
+    image: nginx:1.21.4
+    restart: unless-stopped
+    expose:
+      - 80
+    volumes:
+      - ./conf/system2/conf.d:/etc/nginx/conf.d
+    networks:
+      - reverse-proxy-net
+
+networks:
+  reverse-proxy-net:

@@ -19,3 +19,18 @@ respective docker-compose project. There a project-specific reverse
 proxy further distributes the traffic to the docker-containers by 
 subdomain. 
 
+## Getting started
+
+Add this to your `/etc/hosts`:
+```
+127.0.0.1   system1.domain1.com
+127.0.0.1   system2.domain1.com
+127.0.0.1   system1.domain2.com
+127.0.0.1   system2.domain2.com
+```
+
+## Setting up the firewall
+
+Every project has to use an open port as docker does not allow socket 
+communication. But we don't want to expose them to the internet. Thus 
+we have to set up the firewall to protect these ports.
