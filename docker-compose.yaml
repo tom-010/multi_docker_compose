@@ -11,9 +11,11 @@ services:
       - ./conf/reverse_proxy/conf.d:/etc/nginx/conf.d
       - /var/run/docker.sock:/tmp/docker.sock:ro
     networks:
-      - proxynet
-
+      - domain1com_reverse-proxy-net
+      - domain2com_reverse-proxy-net
 
 networks:
-  proxynet:
-    name: custom_network
+  domain1com_reverse-proxy-net:
+    external: true
+  domain2com_reverse-proxy-net:
+    external: true

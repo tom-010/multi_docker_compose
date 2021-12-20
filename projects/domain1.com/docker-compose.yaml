@@ -8,7 +8,7 @@ services:
     ports:
       - ${PORT}:80
     expose:
-      - 80
+      - ${PORT}
     volumes:
       - ./conf/reverse_proxy/conf.d:/etc/nginx/conf.d
       - /var/run/docker.sock:/tmp/docker.sock:ro
@@ -16,7 +16,6 @@ services:
       - system1
       - system2
     networks:
-      - my-proxy-net
       - reverse-proxy-net
   
   system1:
@@ -41,6 +40,3 @@ services:
 
 networks:
   reverse-proxy-net:
-  my-proxy-net:
-    external:
-      name: custom_network
