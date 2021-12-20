@@ -3,3 +3,4 @@ conf/
 docker-compose.yaml
 up.sh
 down.sh
+.env

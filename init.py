@@ -87,10 +87,10 @@ with open('docker-compose.yaml', 'w') as f:
 
 # Crate a startup/teardown script
 up_script = 'ORIGINAL_PWD=$PWD\n'
-path = join(args.path, project)
+
 
 for project in projects:
-    
+    path = join(args.path, project)
     up_script += '\n'
     up_script += f'cd {path}\n'
     up_script += 'docker-compose up -d\n'
@@ -100,10 +100,9 @@ with open('up.sh', 'w') as f:
     f.write(up_script)
 os.system('chmod +x up.sh')
 
-
-
 down_script = 'ORIGINAL_PWD=$PWD\ndocker-compose down &\n'
 for project in projects:
+    path = join(args.path, project)
     down_script += '\n'
     down_script += f'cd {path}\n'
     down_script += 'docker-compose down &\n'
@@ -112,3 +111,22 @@ for project in projects:
 with open('down.sh', 'w') as f:
     f.write(down_script)
 os.system('chmod +x down.sh')
+
+# Setting a protected port in every .env
+current_port = 9001
+for project in projects:
+    path = join(args.path, project)
+    env_path = join(path, '.env')
+    env_content = open(env_path, 'r').readlines()
+    found = False
+    for line_number, line in enumerate(env_content):
+        if 'PORT=' in line.replace(' ', ''):
+            found = True
+            env_content[line_number] = f'PORT={current_port}\n'
+    if not found:
+        env_content.append(f'PORT={current_port}\n')
+    print(env_path)
+    open(env_path, 'w').writelines(env_content)
+    current_port += 1
+
+        
