@@ -6,7 +6,7 @@ services:
     image: nginx:1.21.4
     restart: unless-stopped
     ports:
-      - 80:80
+      - ${PORT}:80
     volumes:
       - ./conf/reverse_proxy/conf.d:/etc/nginx/conf.d
       - /var/run/docker.sock:/tmp/docker.sock:ro
