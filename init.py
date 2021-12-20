@@ -4,6 +4,7 @@ from os.path import isdir, join, isfile
 import re
 import os
 
+os.system('mkdir -p conf/reverse_proxy/conf.d 2> /dev/null')
 
 parser = argparse.ArgumentParser(description='Configure the reverse-proxy for multiple docker-compose projects')
 parser.add_argument('path', help='Path to the folder that contains the projects as folders')
