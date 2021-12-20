@@ -125,8 +125,6 @@ for project in projects:
             env_content[line_number] = f'PORT={current_port}\n'
     if not found:
         env_content.append(f'PORT={current_port}\n')
-    print(env_path)
-    open(env_path, 'w').writelines(env_content)
     current_port += 1
 
         
