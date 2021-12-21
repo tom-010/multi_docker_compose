@@ -39,6 +39,7 @@ class Config:
 
         self.projects = [f for f in listdir(self.args.path) if is_project(self.args.path, f)]
         self.projects.sort()
+        self.conf_dir = './conf/reverse_proxy/conf.d/'
         return self
 
     def clean_name(self, name):
@@ -60,30 +61,28 @@ server {
 class CreateFolderForNginxConf(Step):
 
     def can_skip(self, config):
-        return isdir('conf/reverse_proxy/conf.d')
+        return isdir(config.conf_dir)
 
     def run(self, config):
-        os.system('mkdir -p conf/reverse_proxy/conf.d 2> /dev/null')
+        os.system(f'mkdir -p {config.conf_dir} 2> /dev/null')
 
 
 class CleanupOldConfigurations(Step):
 
     def run(self, config):
-        conf_dir = 'conf/reverse_proxy/conf.d/' # TODO: move to config
-        for f in [ f for f in listdir(conf_dir) if f.endswith(".conf") ]:
-            os.remove(os.path.join(conf_dir, f)) # cleanup
+        for f in [ f for f in listdir(config.conf_dir) if f.endswith(".conf") ]:
+            os.remove(os.path.join(config.conf_dir, f)) # cleanup
         return True
 
 
 class CreateNewReverseProxyConfigurations(Step):
 
-    def run(self, conf):
-        conf_dir = 'conf/reverse_proxy/conf.d/' # TODO: move to config
-        for project in conf.projects:
+    def run(self, config):
+        for project in config.projects:
             content = reverse_proxy_template
             content = content.replace('{project_name}', project)
-            content = content.replace('{project_name_clean}', conf.clean_name(project))
-            with open(f'{conf_dir}{project}.conf', 'w') as file:
+            content = content.replace('{project_name_clean}', config.clean_name(project))
+            with open(f'{config.conf_dir}{project}.conf', 'w') as file:
                 file.write(content)
         return True
 
@@ -100,7 +99,7 @@ services:
     ports:
       - 80:80
     volumes:
-      - ./conf/reverse_proxy/conf.d:/etc/nginx/conf.d
+      - {conf_dir}:/etc/nginx/conf.d
       - /var/run/docker.sock:/tmp/docker.sock:ro
     networks:
 {networks}
@@ -117,6 +116,7 @@ networks:
             network_definitions += f'  {config.clean_name(project)}_reverse-proxy-net:\n    external: true\n'
 
         docker_compose_content = self.docker_compose_template
+        docker_compose_content = docker_compose_content.replace('{conf_dir}', config.conf_dir)
         docker_compose_content = docker_compose_content.replace('{networks}', networks)
         docker_compose_content = docker_compose_content.replace('{network_definitions}', network_definitions)
         with open('docker-compose.yaml', 'w') as f:
