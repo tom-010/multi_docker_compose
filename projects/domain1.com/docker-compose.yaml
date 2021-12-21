@@ -6,7 +6,7 @@ services:
     image: nginx:1.21.4
     restart: unless-stopped
     ports:
-      - ${PORT:-80}:80
+      - 9001:80
     expose:
       - 80
     volumes:

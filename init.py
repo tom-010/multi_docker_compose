@@ -15,7 +15,6 @@ def main():
         CreateDockerComposeFile(),
         CreateUpScript(),
         CreateDownScript(),
-        SettingProtectedPortInProjects()
     ])
 
 class Config:
@@ -133,10 +132,10 @@ class CreateUpScript(Step):
 
         for project in config.projects:
             path = join(config.args.path, project)
-            up_script += '\n'
+            # we delete the ports section with yq on the fly and load the modified yaml via stdin
             up_script += f'cd {path}\n'
-            up_script += 'docker-compose up -d\n'
-            up_script += 'cd $ORIGINAL_PWD\n'
+            up_script += f'yq e "del(.services.reverse_proxy.ports)" ./docker-compose.yaml | docker-compose -f - up -d\n'
+            up_script += f'cd $ORIGINAL_PWD\n\n'
         up_script += '\ndocker-compose up -d\n'
         with open('up.sh', 'w') as f:
             f.write(up_script)
@@ -159,26 +158,7 @@ class CreateDownScript(Step):
             f.write(down_script)
         os.system('chmod +x down.sh')
         return True
-    
 
-
-class SettingProtectedPortInProjects(Step):
-
-    def run(self, config):
-        current_port = 9001
-        for project in config.projects:
-            path = join(config.args.path, project)
-            env_path = join(path, '.env')
-            env_content = open(env_path, 'r').readlines()
-            found = False
-            for line_number, line in enumerate(env_content):
-                if 'PORT=' in line.replace(' ', ''):
-                    found = True
-                    env_content[line_number] = f'PORT={current_port}\n'
-            if not found:
-                env_content.append(f'PORT={current_port}\n')
-            current_port += 1
-        return True
 
         
 if __name__ == "__main__":

@@ -18,4 +18,3 @@
     - name: Run docker-compose up
       ansible.builtin.shell: './up.sh'
       register: output
-      become: true
