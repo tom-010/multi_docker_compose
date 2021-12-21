@@ -1,0 +1,21 @@
+---
+- hosts: all
+  vars:
+    - user: '{{ ansible_user_id }}'
+  #become: true # makes me root
+  vars_files:
+    - vars/default.yml
+
+  tasks:
+
+    - name: Configure
+      ansible.builtin.shell: './env/bin/python3 init.py projects'
+      args:
+        creates: up.sh
+      register: output
+      become: true
+
+    - name: Run docker-compose up
+      ansible.builtin.shell: './up.sh'
+      register: output
+      become: true

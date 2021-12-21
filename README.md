@@ -23,10 +23,10 @@ subdomain.
 
 Add this to your `/etc/hosts`:
 ```
-127.0.0.1   system1.domain1.com
-127.0.0.1   system2.domain1.com
-127.0.0.1   system1.domain2.com
-127.0.0.1   system2.domain2.com
+192.168.33.10   system1.domain1.com
+192.168.33.10   system2.domain1.com
+192.168.33.10   system1.domain2.com
+192.168.33.10   system2.domain2.com
 ```
 
 To run everything end to end, run: 

@@ -65,6 +65,7 @@ class CreateFolderForNginxConf(Step):
 
     def run(self, config):
         os.system(f'mkdir -p {config.conf_dir} 2> /dev/null')
+        return True
 
 
 class CleanupOldConfigurations(Step):

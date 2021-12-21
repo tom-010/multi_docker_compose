@@ -1,0 +1,89 @@
+---
+- hosts: all
+  vars:
+    - user: '{{ ansible_user_id }}'
+  #become: true # makes me root
+  vars_files:
+    - vars/default.yml
+
+  tasks:
+
+    - name: Install aptitude using apt
+      apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
+      become: true
+
+    - name: Install required system packages
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools', 'python3-docker']
+      become: true
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+      become: true
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+      become: true
+
+    - name: Update apt and install docker-ce
+      apt: update_cache=yes name=docker-ce state=latest
+      become: true
+
+    - name: Install Docker Module for Python
+      pip:
+        name: docker
+
+    - name: Install docker-compse for python
+      pip:
+        name: docker-compose
+
+    - name: Adding the current user '{{ user }}' to group docker
+      user:
+        name: '{{ user }}'
+        groups: docker
+        append: yes
+      become: true
+
+    - name: Reset the SSH connection so that '{{ user }}' is in the group docker
+      ansible.builtin.meta:
+        reset_connection
+
+    - name: Install docker-compose
+      get_url: 
+        url : https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
+        dest: /usr/local/bin/docker-compose
+        mode: '+x'
+      become: true
+
+    - name: Sync Up Projects
+      synchronize:
+        src: ../projects
+        dest: ~/
+        rsync_opts:
+          - "--no-motd"
+          - "--exclude=.git"
+          - '--filter=:- .gitignore'
+
+    - name: Copy up init.py
+      ansible.builtin.copy:
+        src: ../init.py
+        dest: ~/init.py
+
+    - name: Copy up requirements.txt
+      ansible.builtin.copy:
+        src: ../requirements.txt
+        dest: ~/requirements.txt
+
+    - name: Create virtualenv
+      ansible.builtin.shell: 'python3 -m virtualenv env'
+      args:
+        creates: env
+      register: output
+
+    - name: Install packages
+      ansible.builtin.shell: './env/bin/python3 -m pip install -r requirements.txt'
+      register: output
