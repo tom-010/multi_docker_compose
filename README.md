@@ -25,6 +25,7 @@ Add this to your `/etc/hosts`:
 ```
 192.168.33.10   system1.domain1.com
 192.168.33.10   system2.domain1.com
+192.168.33.10   alternative1.domain1.com
 192.168.33.10   system1.domain2.com
 192.168.33.10   system2.domain2.com
 ```

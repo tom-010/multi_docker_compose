@@ -5,6 +5,9 @@ class TestReachable(TestCase):
 
     def test_system1_domain1_is_reachable(self):
         self.assertReachable('http://system1.domain1.com')
+
+    def test_alternative1_domain1_is_reachable(self):
+        self.assertReachable('http://alternative1.domain1.com')
     
     def test_system2_domain1_is_reachable(self):
         self.assertReachable('http://system2.domain1.com')
