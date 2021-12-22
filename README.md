@@ -30,8 +30,9 @@ Add this to your `/etc/hosts`:
 192.168.33.10   system2.domain2.com
 ```
 
-To run everything end to end, run: 
+To run everything end to end, read and run: 
 ```bash
+cd test
 ./scripts/up_test_down.sh
 ```
 
