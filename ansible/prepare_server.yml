@@ -65,23 +65,14 @@
         mode: '+x'
       become: true
 
-    - name: Sync Up Projects
-      synchronize:
-        src: ../projects
-        dest: ~/
-        rsync_opts:
-          - "--no-motd"
-          - "--exclude=.git"
-          - '--filter=:- .gitignore'
-
     - name: Copy up init.py
       ansible.builtin.copy:
-        src: ../init.py
+        src: ./init_script/init.py
         dest: ~/init.py
 
     - name: Copy up requirements.txt
       ansible.builtin.copy:
-        src: ../requirements.txt
+        src: ./init_script/requirements.txt
         dest: ~/requirements.txt
 
     - name: Create virtualenv
@@ -93,3 +84,12 @@
     - name: Install packages
       ansible.builtin.shell: './env/bin/python3 -m pip install -r requirements.txt'
       register: output
+
+    - name: Sync Up Projects
+      synchronize:
+        src: ../test/projects
+        dest: ~/
+        rsync_opts:
+          - "--no-motd"
+          - "--exclude=.git"
+          - '--filter=:- .gitignore'

@@ -35,12 +35,21 @@ To run everything end to end, run:
 ./scripts/up_test_down.sh
 ```
 
-## Setting up the firewall
+## Steps
 
-Every project has to use an open port as docker does not allow socket 
-communication. But we don't want to expose them to the internet. Thus 
-we have to set up the firewall to protect these ports.
+There are essentially two steps:
+1. Prepare the multi-project server
+2. Add the project to the multi-project server
+   1. Upload the files
+   2. Reinitialize
 
-## Thank you
-* https://tjtelan.com/blog/how-to-link-multiple-docker-compose-via-network/
-* 
+
+This can be turned inside out. Thus when you created a new project you 
+provide a user@location. The prepare-server script then checks if the 
+multi-project server is already set up and if not does so. Then it adds
+the current project to the given server.
+
+
+## Todo
+
+* Zero-Downtime when reinitialize

@@ -5,3 +5,4 @@ up.sh
 down.sh
 .env
 .vagrant
+env/
