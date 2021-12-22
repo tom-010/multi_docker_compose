@@ -30,7 +30,12 @@ then
 fi
 
 # Add ssh credentials to server
-# TODO
+if ssh -o PasswordAuthentication=no  -o BatchMode=yes $ssh exit &>/dev/null; then
+    echo "SSH-Key already uploaded"
+else
+    echo "Uploading SSH-Key"
+    ssh-copy-id $ssh || exit 1
+fi
 
 # Initialize/Prepare Server if not already done
 if ssh $ssh 'test -f ~/init.py'; then
