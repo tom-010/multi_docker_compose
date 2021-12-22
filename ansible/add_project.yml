@@ -7,14 +7,22 @@
     - vars/default.yml
 
   tasks:
+    - name: Sync Up Project
+      synchronize:
+        src: "{{ project_path }}"
+        dest: "~/projects/"
+        rsync_opts:
+          - "--no-motd"
+          - "--exclude=.git"
+          - '--filter=:- .gitignore'
 
-    - name: Configure
+    - name: Configure front reverse proxy
       ansible.builtin.shell: './env/bin/python3 init.py projects'
       args:
         creates: up.sh
       register: output
       become: true
 
-    - name: Run docker-compose up
+    - name: Run docker-compose up of front proxy and every project
       ansible.builtin.shell: './up.sh'
       register: output

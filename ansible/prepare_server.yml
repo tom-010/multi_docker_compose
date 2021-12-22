@@ -85,11 +85,8 @@
       ansible.builtin.shell: './env/bin/python3 -m pip install -r requirements.txt'
       register: output
 
-    - name: Sync Up Projects
-      synchronize:
-        src: ../test/projects
-        dest: ~/
-        rsync_opts:
-          - "--no-motd"
-          - "--exclude=.git"
-          - '--filter=:- .gitignore'
+    - name: Create place for the projects
+      file:
+        path: ~/projects
+        state: directory
+    
