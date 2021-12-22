@@ -18,8 +18,6 @@
 
     - name: Configure front reverse proxy
       ansible.builtin.shell: './env/bin/python3 init.py projects'
-      args:
-        creates: up.sh
       register: output
       become: true
 

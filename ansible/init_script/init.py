@@ -56,6 +56,14 @@ server {
 }
 """
 
+reverse_proxy_default_template = """
+server {
+    listen 80 default_server;
+    server_name _;
+    return 404;
+}
+"""
+
 class CreateFolderForNginxConf(Step):
 
     def can_skip(self, config):
@@ -80,6 +88,7 @@ class CreateNewReverseProxyConfigurations(Step):
         # step 1: collecting domains
         domains = self._search_projects_for_domains(config)
         self._generate_reverse_proxy_config(config, domains)
+        self._generate_reverse_proxy_default_config(config)
         return True
 
     def _search_projects_for_domains(self, config):
@@ -108,6 +117,10 @@ class CreateNewReverseProxyConfigurations(Step):
             content = content.replace('{project_name_clean}', config.clean_name(project))
             with open(f'{config.conf_dir}{project}.conf', 'w') as file:
                 file.write(content)
+
+    def _generate_reverse_proxy_default_config(self, config):
+        open(f'{config.conf_dir}default.conf', 'w').write(reverse_proxy_default_template)
+        reverse_proxy_default_template
 
 
 

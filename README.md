@@ -50,7 +50,3 @@ provide a user@location. The prepare-server script then checks if the
 multi-project server is already set up and if not does so. Then it adds
 the current project to the given server.
 
-
-## Todo
-
-* Zero-Downtime when reinitialize
