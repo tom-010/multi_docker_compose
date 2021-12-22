@@ -171,7 +171,7 @@ class CreateUpScript(Step):
             path = join(config.args.path, project)
             # we delete the ports section with yq on the fly and load the modified yaml via stdin
             up_script += f'cd {path}\n'
-            up_script += f'yq e "del(.services.reverse_proxy.ports)" ./docker-compose.yaml | docker-compose -f - up -d\n'
+            up_script += f'yq e "del(.services.reverse_proxy.ports)" ./docker-compose.yaml | docker-compose -f - up --build -d > docker-compose-create.logs 2>&1\n'
             up_script += f'cd $ORIGINAL_PWD\n\n'
         up_script += '\ndocker-compose up -d\n'
         with open('up.sh', 'w') as f:
