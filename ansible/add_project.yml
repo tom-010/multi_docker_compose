@@ -21,6 +21,12 @@
       register: output
       become: true
 
+    - name: Create .env
+      ansible.builtin.shell: 'cd ~/projects/{{ project_name }}/ && (test -f scripts/setup_env.sh && ./scripts/setup_env.sh || true)'
+      args:
+        creates: "~/projects/{{ project_name }}/.env"
+      register: output
+
     - name: Run docker-compose up of front proxy and every project
       ansible.builtin.shell: './up.sh'
       register: output

@@ -43,4 +43,4 @@ fi
 
 
 # adding project to the server
-ansible-playbook  $SCRIPT_DIR/ansible/add_project.yml -v -e project_path=$project_path -i $ssh,
+ansible-playbook  $SCRIPT_DIR/ansible/add_project.yml -v -e project_path=$project_path -e project_name=$project_name -i $ssh,
